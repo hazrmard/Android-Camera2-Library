@@ -1,4 +1,4 @@
-package me.aflak.ezcam;
+package me.iahmed.pixcan;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Size;
 import android.view.Surface;
@@ -53,6 +54,7 @@ public class EZCam {
     private final String ERROR_CONFIG_SESSION = "Error occurred while configuring capture session.";
     private final String FAIL_CAPTURE = "Capture session failed.";
     private final String ERROR_GET_CHARACTERISTICS = "Could not get camera's characteristics.";
+    private final String INVALID_STORAGE_ARGUMENT = "Use EXTERNAL_STORAGE or INTERNAL_STORAGE as arguments.";
 
     private boolean stopPreviewOnPicture=true;
     private boolean isPreviewing=false;
@@ -221,7 +223,7 @@ public class EZCam {
     }
 
     public File saveImage(ImageReader imageReader, String filename) throws IOException {
-        saveImage(imageReader, filename, INTERNAL_STORAGE);
+        return saveImage(imageReader, filename, INTERNAL_STORAGE);
     }
 
     public File saveImage(ImageReader imageReader, String filename, int storage) throws IOException {
@@ -229,13 +231,17 @@ public class EZCam {
         File file;
         if (storage == INTERNAL_STORAGE) {
             file = new File(context.getFilesDir(), filename);
-        else if (storage == EXTERNAL_STORAGE) {
-            file = new File(context.getExternalFilesDir(), filename);
         }
-        if(file.exists()) {
-            image.close();
+        else if (storage == EXTERNAL_STORAGE) {
+            file = new File(filename);
+        } else {
+            throwError(INVALID_STORAGE_ARGUMENT);
             return null;
         }
+//        if(file.exists()) {
+//            image.close();
+//            return null;
+//        }
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
