@@ -233,15 +233,16 @@ public class EZCam {
             file = new File(context.getFilesDir(), filename);
         }
         else if (storage == EXTERNAL_STORAGE) {
-            file = new File(filename);
+            file = new File(Environment.getExternalStorageDirectory(), filename);
         } else {
             throwError(INVALID_STORAGE_ARGUMENT);
             return null;
         }
-//        if(file.exists()) {
+        if(file.exists()) {
+            System.out.println("File already exists, overwriting.");
 //            image.close();
 //            return null;
-//        }
+        }
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
