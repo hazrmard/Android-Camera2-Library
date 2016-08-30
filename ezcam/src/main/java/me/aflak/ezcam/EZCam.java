@@ -43,6 +43,8 @@ public class EZCam {
 
     public final static int FRONT = 1;
     public final static int BACK = 2;
+    public final static int EXTERNAL_STORAGE = 1;
+    public final static int INTERNAL_STORAGE = 2;
 
     private final String CAM_DOES_NOT_EXIST = "No camera found for the specified id.";
     private final String ERROR_OPENING_CAM = "Error occurred while opening the camera.";
@@ -219,8 +221,17 @@ public class EZCam {
     }
 
     public File saveImage(ImageReader imageReader, String filename) throws IOException {
+        saveImage(imageReader, filename, INTERNAL_STORAGE);
+    }
+
+    public File saveImage(ImageReader imageReader, String filename, int storage) throws IOException {
         Image image = imageReader.acquireLatestImage();
-        File file = new File(context.getFilesDir(), filename);
+        File file;
+        if (storage == INTERNAL_STORAGE) {
+            file = new File(context.getFilesDir(), filename);
+        else if (storage == EXTERNAL_STORAGE) {
+            file = new File(context.getExternalFilesDir(), filename);
+        }
         if(file.exists()) {
             image.close();
             return null;
