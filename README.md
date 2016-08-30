@@ -10,6 +10,11 @@ Add the following line in your gradle dependencies:
 # Permission
 
 	<uses-permission android:name="android.permission.CAMERA" />
+
+For storing pictures on SD card (optional):  
+```
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
   
 # In your Activity
 
@@ -24,6 +29,7 @@ Add the following line in your gradle dependencies:
 	    public void onPicture(ImageReader reader) {
 	        // picture available
 	        cam.saveImage(reader, "image.jpeg"); // save to internal storage
+	        cam.saveImage(reader, "image.jpeg", EZCam.EXTERNAL_STORAGE); // OR external storage
 	    }
 	
 	    @Override
