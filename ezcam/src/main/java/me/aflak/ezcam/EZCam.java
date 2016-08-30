@@ -1,4 +1,4 @@
-package me.iahmed.pixcan;
+package me.aflak.ezcam;
 
 import android.Manifest;
 import android.content.Context;
